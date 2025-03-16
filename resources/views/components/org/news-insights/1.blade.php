@@ -1,0 +1,17 @@
+{{-- <div class="fusion-fullwidth fullwidth-box fusion-builder-row-4 fusion-flex-container has-pattern-background has-mask-background nonhundred-percent-fullwidth non-hundred-percent-height-scrolling"
+    style="--awb-border-radius-top-left:0px;--awb-border-radius-top-right:0px;--awb-border-radius-bottom-right:0px;--awb-border-radius-bottom-left:0px;--awb-margin-top:100px;--awb-margin-bottom:120px;--awb-background-color:var(--awb-color8);--awb-flex-wrap:wrap;">
+    <div class="awb-background-mask"
+        style="background-image:  url(data:image/svg+xml;utf8,%3Csvg%20width%3D%221920%22%20height%3D%22954%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20clip-path%3D%22url%28%23prefix__prefix__clip0_77_23452%29%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M1353%20308.5c0%20255.507-131.58%20485.45-341.45%20645.5-187.291%20142.83-436.933%20230-711.05%20230C-280.78%201184-752%20792.025-752%20308.5S-280.78-567%20300.5-567c450.743%200%20835.31%20235.692%20985.3%20567%2043.44%2095.948%2067.2%20199.916%2067.2%20308.5z%22%20fill%3D%22rgba%2861%2C67%2C109%2C1%29%22%2F%3E%3Cpath%20d%3D%22M1321.57%20538C1357.08%20287.516%201273.7%2089.91%201127-.418L1374.18-6c65.77%20100.68-15.89%20431.512-52.61%20544zM312%20955c432.242%200%20746.77-180.667%20850-271-90.34%20157.09-176.766%20246.121-208.688%20271H312z%22%20fill%3D%22rgba%2834%2C37%2C61%2C1%29%22%20fill-opacity%3D%22.25%22%2F%3E%3Cpath%20d%3D%22M1344.5%20427c0-252.4-212.67-390.833-319-428.5H1373c70%2082.4%2010.17%20320-28.5%20428.5z%22%20fill%3D%22rgba%2834%2C37%2C61%2C1%29%22%20fill-opacity%3D%22.1%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M1337%20184.5c0%20324.402-198.63%20609.049-497.356%20769.5H0V0h1285.8c-149.99-331.308-534.557-567-985.3-567C-280.78-567-752-175.025-752%20308.5c0%2040.898%203.371%2081.142%209.895%20120.549C-617.527%20811.461-207.995%201092%20278%201092c206.311%200%20398.842-50.56%20561.644-138h171.906C1221.42%20793.95%201353%20564.007%201353%20308.5c0-53.218-5.71-105.326-16.64-155.925.42%2010.596.64%2021.239.64%2031.925z%22%20fill%3D%22rgba%2834%2C37%2C61%2C1%29%22%20fill-opacity%3D%22.5%22%2F%3E%3C%2Fg%3E%3Cdefs%3E%3CclipPath%20id%3D%22prefix__prefix__clip0_77_23452%22%3E%3Cpath%20fill%3D%22rgba%2834%2C37%2C61%2C1%29%22%20d%3D%22M0%200h1920v954H0z%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3C%2Fsvg%3E);opacity: 0.3 ;transform: scale(-1, 1);mix-blend-mode:normal;">
+    </div>
+    <div class="fusion-builder-row fusion-row fusion-flex-align-items-flex-start fusion-flex-content-wrap"
+        style="max-width:1372.8px;margin-left: calc(-4% / 2 );margin-right: calc(-4% / 2 );">
+        <div class="fusion-layout-column fusion_builder_column fusion-builder-column-9 fusion_builder_column_1_1 1_1 fusion-flex-column"
+            style="--awb-padding-top:45px;--awb-padding-bottom:55px;--awb-bg-size:cover;--awb-width-large:100%;--awb-margin-top-large:0px;--awb-spacing-right-large:1.92%;--awb-margin-bottom-large:0px;--awb-spacing-left-large:1.92%;--awb-width-medium:100%;--awb-order-medium:0;--awb-spacing-right-medium:1.92%;--awb-spacing-left-medium:1.92%;--awb-width-small:100%;--awb-order-small:0;--awb-spacing-right-small:1.92%;--awb-spacing-left-small:1.92%;">
+            <div
+                class="fusion-column-has-shadow fusion-flex-justify-content-flex-start fusion-content-layout-column">
+
+            </div>
+        </div>
+    </div>
+</div> --}}
+
