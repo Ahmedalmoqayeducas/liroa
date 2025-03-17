@@ -12,6 +12,7 @@ class FileList extends Component
     public $folders = [];     // لحفظ المجلدات
     public $files = [];       // لحفظ الملفات
     public $folder = '';
+    public $type = '';
     function openFolder($id)
     {
         $this->folder = $id;
@@ -22,24 +23,46 @@ class FileList extends Component
     public function folderUpdatedFromSidebarF($folderId)
     {
         $this->folder = $folderId;
+        if($folderId == ''){
+            $this->type = '';
+        }
+        $this->retrive();
     }
+
     #[On('list-render')]
     function retrive()
     {
-        if ($this->folder != '') {
-            $this->folders = Folder::where('parent_id', $this->folder)->orderBy('updated_at', 'desc')->get();
-            $this->files = File::where('folder_id', $this->folder)->orderBy('updated_at', 'desc')->get();
+        if ($this->type == 'trash') {
+            if ($this->folder != '') {
+                $this->folders = Folder::onlyTrashed()->where('parent_id', $this->folder)->orderBy('updated_at', 'desc')->get();
+                $this->files = File::onlyTrashed()->where('folder_id', $this->folder)->orderBy('updated_at', 'desc')->get();
+            } else {
+                $this->folders = Folder::onlyTrashed()->whereNull('parent_id')->orderBy('updated_at', 'desc')->get();
+                $this->files = File::onlyTrashed()->whereNull('folder_id')->orderBy('updated_at', 'desc')->get();
+            }
         } else {
-            $this->folders = Folder::whereNull('parent_id')->orderBy('updated_at', 'desc')->get();
-            $this->files = File::whereNull('folder_id')->orderBy('updated_at', 'desc')->get();
+            if ($this->folder != '') {
+                $this->folders = Folder::where('parent_id', $this->folder)->orderBy('updated_at', 'desc')->get();
+                $this->files = File::where('folder_id', $this->folder)->orderBy('updated_at', 'desc')->get();
+            } else {
+                $this->folders = Folder::whereNull('parent_id')->orderBy('updated_at', 'desc')->get();
+                $this->files = File::whereNull('folder_id')->orderBy('updated_at', 'desc')->get();
+            }
         }
+    }
+    #[On('TrashFromSidebar')]
+    public function TrashFromSidebarF()
+    {
+        $this->type = 'trash';
+        $this->folder = '';
+        $this->retrive();
     }
 
     #[On('deleteItem')]
     public function deleteItem($id, $type)
     {
         // dd($type);
-        if ($type=="folder") {
+        if ($type == "folder") {
             // العثور على العنصر (المجلد في هذه الحالة)
             $folder = Folder::find($id); // أو File::find إذا كان الملف هو العنصر
 
@@ -60,7 +83,7 @@ class FileList extends Component
                 session()->flash('error', 'Folder not found.');
             }
             $this->dispatch('folderDeleted');
-        }elseif($type =="file"){
+        } elseif ($type == "file") {
             $file = File::find($id);
             $file->delete();
             $this->dispatch('fileDeleted');
@@ -96,10 +119,12 @@ class FileList extends Component
         }
     }
 
-
-    public function render()
+    public function mount()
     {
         $this->retrive();
+    }
+    public function render()
+    {
         return view('livewire.file-list');
     }
 }

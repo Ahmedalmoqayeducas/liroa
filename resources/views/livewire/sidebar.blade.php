@@ -22,7 +22,7 @@
     </div>
 
     <!-- Modal for file creation -->
-    <div class="modal fade" id="createFileModal" tabindex="-1" aria-labelledby="createFileModalLabel" aria-hidden="true">
+    <div class="modal fade" wire:ignore id="createFileModal" tabindex="-1" aria-labelledby="createFileModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content box-shadow shadow">
                 <div class="modal-header">
@@ -36,7 +36,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="fileUpload" class="form-label">Upload File</label>
-                        <input type="file" class="form-control" id="fileUpload" wire:model="file" accept="image/*,application/pdf,.docx,.txt">
+                        <input id="inputFile" wire:ignore type="file" multiple class="form-control" id="fileUpload" wire:model.lazy="files" accept="image/*,application/pdf,.docx,.txt">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -61,6 +61,10 @@
     <!-- List of Sidebar Items -->
     <ul class="nav flex-column">
         <li class="nav-item">
+            <a href="{{ route('dashboard') }}" class="btn btn-outline-dark border-0 rounded-0 w-100 text-left d-flex align-items-center justify-content-start">
+                <i class="fas fa-dashboard"></i> &ThinSpace; Dashboard
+            </a>
+        <li class="nav-item">
             <a wire:click='home' class="btn btn-outline-dark border-0 rounded-0 w-100 text-left d-flex align-items-center justify-content-start">
                 <i class="fas fa-home"></i> &ThinSpace; Home
             </a>
@@ -84,14 +88,14 @@
             <a href="#" class="btn btn-outline-dark border-0 rounded-0 w-100 text-left d-flex align-items-center justify-content-start">
                 <i class="fas fa-clock"></i> &ThinSpace; Recent
             </a>
-        </li> --}}
+        </li>
         <li class="nav-item">
             <a href="#" class="btn btn-outline-dark border-0 rounded-0 w-100 text-left d-flex align-items-center justify-content-start">
                 <i class="fas fa-star"></i> &ThinSpace; Starred
             </a>
-        </li>
+        </li>--}}
         <li class="nav-item">
-            <a href="#" class="btn btn-outline-dark border-0 rounded-0 w-100 text-left d-flex align-items-center justify-content-start">
+            <a wire:click='trash' class="btn btn-outline-dark border-0 rounded-0 w-100 text-left d-flex align-items-center justify-content-start">
                 <i class="fas fa-trash"></i> &ThinSpace; Trash
             </a>
         </li>

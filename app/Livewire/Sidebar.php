@@ -16,6 +16,7 @@ class Sidebar extends Component
     public $folderName = '';  // لحفظ اسم المجلد
     public $fileName = '';    // لحفظ اسم الملف
     public $file;             // لحفظ الملف نفسه
+    public $files=[];             // لحفظ الملف نفسه
     public $folder = '';     // لحفظ المجلدات
 
     #[On('folderUpdated')]
@@ -68,40 +69,34 @@ class Sidebar extends Component
     // دالة لإنشاء الملف
     public function createFile()
     {
-        if (!empty($this->fileName) && $this->file) {
-            // حفظ الملف (مثال حفظه في public directory)
-            $filePath = $this->file->store('files', 'public');
-            $mimeType = $this->file->getMimeType();
-            $size = $this->file->getSize();
-            if ($this->folder != '') {
-                $file = File::create([
-                    'name' => $this->fileName,
-                    'path' => $filePath,
+        if (!empty($this->files)) {
+            foreach ($this->files as $file) {
+                $storedFile = $file->store('files', 'public');
+                $mimeType = $file->getMimeType();
+                $size = $file->getSize();
+
+                File::create([
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $storedFile,
                     'mime_type' => $mimeType,
                     'size' => $size,
-                    'folder_id' => $this->folder,  // يمكنك تحديد المجلد إذا كنت تحتاج له
-                    'admin_id' => auth()->user()->id, // تأكد من أنك تقوم بتخزين الـ admin_id بشكل صحيح
-                ]);
-            } else {
-                $file = File::create([
-                    'name' => $this->fileName,
-                    'path' => $filePath,
-                    'mime_type' => $mimeType,
-                    'size' => $size,
-                    'folder_id' => null,  // يمكنك تحديد المجلد إذا كنت تحتاج له
-                    'admin_id' => auth()->user()->id, // تأكد من أنك تقوم بتخزين الـ admin_id بشكل صحيح
+                    'folder_id' => $this->folder ? $this->folder : null,
+                    'admin_id' => auth()->user()->id,
                 ]);
             }
-            // إعادة تعيين المدخلات
-            $this->fileName = '';
-            $this->file = null;
 
-            // إغلاق المودال
+            $this->files = []; // إعادة تعيين الملفات بعد الحفظ
+            $this->fileName = ''; // إعادة تعيين الملفات بعد الحفظ
+            session()->flash('message', 'Files uploaded successfully!');
             $this->dispatch('close-create-file-modal');
             $this->dispatch('list-render');
+            $this->render();
         }
     }
 
+    public function trash(){
+        $this->dispatch("TrashFromSidebar");
+    }
     public function render()
     {
         return view('livewire.sidebar');

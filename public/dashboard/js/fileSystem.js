@@ -16,7 +16,7 @@
             // دالة لعرض القائمة المنسدلة في المكان الصحيح
             function showDropdownMenu(e, item) {
                 // إزالة أي قوائم منسدلة سابقة
-                const existingMenu = document.querySelector('.dropdown-menu');
+                const existingMenu = document.querySelector('.dropdown-menu23');
                 if (existingMenu) {
                     existingMenu.remove();
                 }
@@ -32,10 +32,10 @@
                     <a class="dropdown-item" href="#" onclick="deleteItem(${item.dataset.id},'${item.dataset.type}')">
                         <i class="fas fa-trash-alt me-2"></i> Delete
                     </a>
-                    <a class="dropdown-item" href="#" onclick="toggleAlbumVisibility(${item.dataset.id},'${item.dataset.type}')">
-                        <i class="fas fa-eye-slash me-2"></i> Toggle Album Visibility
-                    </a>
-                `;
+                    `;
+                    // <a class="dropdown-item" href="#" onclick="toggleAlbumVisibility(${item.dataset.id},'${item.dataset.type}')">
+                    //     <i class="fas fa-eye-slash me-2"></i> Toggle Album Visibility
+                    // </a>
 
                 // إضافة القائمة إلى الصفحة
                 document.body.appendChild(menu);

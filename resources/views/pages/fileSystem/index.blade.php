@@ -8,10 +8,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('dashboard/fa/css/all.min.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <style>
         body {
             height: 100vh;
+            overflow-y: scroll;
         }
 
         .sidebar {
@@ -84,7 +85,7 @@
 
         <!-- Main Content -->
         <div class="content flex-grow-1">
-            @livewire('navbar')
+            {{-- @livewire('navbar') --}}
 
             <h5>Files</h5>
             @livewire('file-list')
