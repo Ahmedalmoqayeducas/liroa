@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\fileSystem\fileController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionsController;
@@ -103,6 +104,10 @@ Route::prefix('dash')->middleware(['auth:admin,user', 'verified'])->group(functi
     Route::prefix('admin/password')->group(function () {
         Route::get('change', 'auth\authController@changePassword')->name('password.change');
         Route::post('update', 'auth\authController@updatePassword')->name('password.update');
+    });
+
+    Route::prefix('fileSystem')->group(function(){
+        Route::get('/',[fileController::class,'index']);
     });
 });
 
