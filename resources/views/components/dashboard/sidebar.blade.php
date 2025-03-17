@@ -162,6 +162,17 @@
                     ],
                 ],
             ])
+            @include('components.dashboard.sidebar.sidbard-lists', [
+                'list_name' => 'Album',
+                'icon' => 'heroicons-outline:folder',
+                'elements' => [
+                    [
+                        'name' => 'Album system',
+                        'route_name' => 'filesystem',
+                        'route' => 'fileSystem',
+                    ],
+                ],
+            ])
             {{-- @endcanany --}}
             @include('components.dashboard.sidebar.sidbard-lists', [
                 'list_name' => __('dashboard.account'),

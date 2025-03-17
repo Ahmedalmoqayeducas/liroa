@@ -3,9 +3,9 @@
 use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\fileSystem\fileController;
 use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\fileSystem\fileController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionsController;
@@ -14,11 +14,18 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SlidesController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\TeamController;
+use App\Models\File;
 use Illuminate\Support\Facades\Route;
 
 ###################### Website Content ###################################
 Route::get('/', [DashboardController::class, 'home'])->name('home');
-Route::get('/activities', [DashboardController::class, 'activities'])->name('activities');
+Route::prefix('/activities')->group(function () {
+    Route::get('/', [DashboardController::class, 'activities'])->name('activities');
+    Route::get('/news', [DashboardController::class, 'news'])->name('activities.news');
+    Route::get('/insights', [DashboardController::class, 'insights'])->name('activities.insights');
+
+    Route::get('/{id}', [DashboardController::class, 'activity'])->name('activity');
+});
 Route::get('/about', [DashboardController::class, 'about'])->name('about');
 Route::get('others/{page}', [DashboardController::class, 'userShow'])->name('pages.userShow');
 Route::get('/contact', [DashboardController::class, 'contact'])->name('contact');
@@ -38,6 +45,8 @@ Route::get('/team', [DashboardController::class, 'team'])->name('team');
 
 ############################# Dashboard Just For Verification Emails ####################################
 Route::prefix('dash')->middleware(['auth:admin,user', 'verified'])->group(function () {
+
+    Route::get('filesystem', [fileController::class,'index'])->name('fileSystem');
 
     ### Dashboard Page ###
     Route::get('/', 'DashboardController@index')->name('dashboard');
@@ -84,6 +93,7 @@ Route::prefix('dash')->middleware(['auth:admin,user', 'verified'])->group(functi
         Route::get('/{page}/posts/edit', 'PageController@editPagePosts')->name('page-posts.edit');
         Route::put('/{page}/posts', 'PageController@updatePagePosts')->name('page-posts.update');
         Route::resource('/activities', ActivitiesController::class);
+        Route::put('/activities/{activity}/slide', [ActivitiesController::class, 'slidable'])->name('activities.slide.add');
         Route::resource('/slides', SlidesController::class);
         Route::resource('/goals', GoalsController::class);
         Route::resource('/contacts', ContactController::class);
@@ -104,10 +114,6 @@ Route::prefix('dash')->middleware(['auth:admin,user', 'verified'])->group(functi
     Route::prefix('admin/password')->group(function () {
         Route::get('change', 'auth\authController@changePassword')->name('password.change');
         Route::post('update', 'auth\authController@updatePassword')->name('password.update');
-    });
-
-    Route::prefix('fileSystem')->group(function(){
-        Route::get('/',[fileController::class,'index']);
     });
 });
 

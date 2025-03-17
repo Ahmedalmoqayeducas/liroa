@@ -21,11 +21,11 @@
                     <h1 class="">رؤية واضحة للمنشور في الصفحة كيف سيظهر </h1>
                     <hr>
                 </div>
-                <a href="{{ route('posts.index') }}" class="btn btn-lg btn-danger">
+                <a href="{{ route('activities.index') }}" class="btn btn-lg btn-danger">
                     الرجوع لعرض المنشورات
                 </a>
                 <h3 class="text-center">{{ $data->title }}</h3>
-
+                <img src="{{ asset(Storage::url("$data->thumbnail")) }}">
                 <div>
                     {!! $data->description !!}
                 </div>

@@ -44,6 +44,7 @@ class PageController extends Controller
      */
     public function show(int $pageId)
     {
+
         $page = Page::findOrFail($pageId);
         $data = $page->posts()->orderBy('id')->get();
         return view('pages.org-pages.show', compact('data'));
@@ -52,7 +53,7 @@ class PageController extends Controller
     /**
      * User-facing display of the page.
      */
-  
+
 
     /**
      * Show form for editing page posts.
@@ -101,7 +102,6 @@ class PageController extends Controller
             'name' => 'required|string|min:3',
             'type' => 'required|in:expertise,projects'
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,

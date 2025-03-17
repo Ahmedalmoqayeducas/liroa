@@ -1,4 +1,3 @@
-
 <div class="fusion-fullwidth fullwidth-box fusion-builder-row-2 fusion-flex-container has-pattern-background has-mask-background hundred-percent-fullwidth non-hundred-percent-height-scrolling"
     style="--awb-border-radius-top-left:0px;--awb-border-radius-top-right:0px;--awb-border-radius-bottom-right:0px;--awb-border-radius-bottom-left:0px;--awb-padding-right-small:20px;--awb-padding-left-small:20px;--awb-flex-wrap:wrap;">
     <div class="fusion-builder-row fusion-row fusion-flex-align-items-center fusion-flex-content-wrap"
@@ -36,4 +35,3 @@
         </div>
     </div>
 </div>
-

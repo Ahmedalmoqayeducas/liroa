@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\activities;
 use App\Models\Post;
 use App\Models\Subscriber;
 use App\Notifications\NewPostNotification;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 // use \DOMElement\removeAttribute;
 class PostController extends Controller
@@ -38,43 +40,43 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-        $description = $request->description;
+    // public function store(Request $request)
+    // {
+    //     //
+    //     $description = $request->description;
 
-        $dom = new DOMDocument();
-        $dom->loadHTML($description, 9);
+    //     $dom = new DOMDocument();
+    //     $dom->loadHTML($description, 9);
 
-        $images = $dom->getElementsByTagName('img');
+    //     $images = $dom->getElementsByTagName('img');
 
-        foreach ($images as $key => $img) {
-            $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
-            $image_name = "/upload/" . time() . $key . ".png";
-            file_put_contents(public_path() . $image_name, $data);
+    //     foreach ($images as $key => $img) {
+    //         $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
+    //         $image_name = "/upload/" . time() . $key . ".png";
+    //         file_put_contents(public_path() . $image_name, $data);
 
-            $img->removeAttribute('src');
-            $img->setAttribute('src', $image_name);
-        }
+    //         $img->removeAttribute('src');
+    //         $img->setAttribute('src', $image_name);
+    //     }
 
-        $description = $dom->saveHTML();
-        $admin = Auth::user();
-        $post =    Post::create([
-            'title' => $request->title,
-            'description' => $description,
-            'admin_id' => $admin->id,
-        ]);
+    //     $description = $dom->saveHTML();
+    //     $admin = Auth::user();
+    //     $post =    Post::create([
+    //         'title' => $request->title,
+    //         'description' => $description,
+    //         'admin_id' => $admin->id,
+    //     ]);
 
 
-        return to_route('posts.index');
-    }
+    //     return to_route('posts.index');
+    // }
 
 
     /**
      * Display the specified resource.
      */
     public function show(Post $post)
-    { 
+    {
         return view('pages.Posts.show', ['data' => $post]);
     }
 
@@ -108,37 +110,120 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    // public function update(Request $request, Post $post)
+    // {
+    //     $description = $request->description;
+
+    //     $dom = new DOMDocument();
+    //     $dom->loadHTML($description, 9);
+
+    //     $images = $dom->getElementsByTagName('img');
+
+    //     foreach ($images as $key => $img) {
+
+    //         // Check if the image is a new one
+    //         if (strpos($img->getAttribute('src'), 'data:image/') === 0) {
+
+    //             $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
+    //             $image_name = "/upload/" . time() . $key . '.png';
+    //             file_put_contents(public_path() . $image_name, $data);
+
+    //             $img->removeAttribute('src');
+    //             $img->setAttribute('src', $image_name);
+    //         }
+    //     }
+    //     $description = $dom->saveHTML();
+
+    //     $post->update([
+    //         'title' => $request->title,
+    //         'description' => $description
+    //     ]);
+    //     return to_route('posts.index');
+    // }
+
+    public function store(Request $request)
     {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'thumbnail' => 'required|image|max:2048',
+            'card_description' => 'required|string|max:500',
+            'description' => 'required|string',
+            'type' => 'required|in:news,insights',
+        ]);
+
         $description = $request->description;
-
         $dom = new DOMDocument();
-        $dom->loadHTML($description, 9);
-
+        $dom->loadHTML($description, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $images = $dom->getElementsByTagName('img');
 
         foreach ($images as $key => $img) {
-
-            // Check if the image is a new one
             if (strpos($img->getAttribute('src'), 'data:image/') === 0) {
-
                 $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
-                $image_name = "/upload/" . time() . $key . '.png';
+                $image_name = "/uploads/activities/" . time() . $key . ".png";
                 file_put_contents(public_path() . $image_name, $data);
-
-                $img->removeAttribute('src');
                 $img->setAttribute('src', $image_name);
             }
         }
         $description = $dom->saveHTML();
 
-        $post->update([
-            'title' => $request->title,
-            'description' => $description
+        // Store thumbnail
+        $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
+        $admin = Auth::user();
+        activities::create([
+            'title' => $validated['title'],
+            'thumbnail' => $thumbnailPath,
+            'card_description' => $validated['card_description'],
+            'description' => $description,
+            'type' => $validated['type'],
+            'admin_id' => $admin->id,
         ]);
-        return to_route('posts.index');
+
+        return redirect()->route('posts.index')->with('success', 'Activity created successfully!');
     }
 
+    public function update(Request $request, activities $activity)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'thumbnail' => 'sometimes|image|max:2048',
+            'card_description' => 'required|string|max:500',
+            'description' => 'required|string',
+            'type' => 'required|in:news,insights',
+        ]);
+
+        // Process description images
+        $description = $request->description;
+        $dom = new DOMDocument();
+        $dom->loadHTML($description, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $images = $dom->getElementsByTagName('img');
+
+        foreach ($images as $key => $img) {
+            if (strpos($img->getAttribute('src'), 'data:image/') === 0) {
+                $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
+                $image_name = "/uploads/activities/" . time() . $key . ".png";
+                file_put_contents(public_path() . $image_name, $data);
+                $img->setAttribute('src', $image_name);
+            }
+        }
+        $description = $dom->saveHTML();
+
+        // Handle thumbnail update
+        if ($request->hasFile('thumbnail')) {
+            Storage::disk('public')->delete($activity->thumbnail);
+            $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
+            $validated['thumbnail'] = $thumbnailPath;
+        }
+
+        $activity->update([
+            'title' => $validated['title'],
+            'thumbnail' => $validated['thumbnail'] ?? $activity->thumbnail,
+            'card_description' => $validated['card_description'],
+            'description' => $description,
+            'type' => $validated['type'],
+        ]);
+
+        return redirect()->route('posts.show', $activity)->with('success', 'Activity updated successfully!');
+    }
     /**
      * Remove the specified resource from storage.
      */

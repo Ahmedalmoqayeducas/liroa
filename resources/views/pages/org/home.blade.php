@@ -9,6 +9,7 @@
     @include('components.org-temp2.home-page.home-7')
     @include('components.org-temp2.home-page.home-8')
     @include('components.org-temp2.home-page.home-9')
+    @include('components.org-temp2.home-page.home-10')
     <br>
     <br>
     @include('components.org.subscribe')

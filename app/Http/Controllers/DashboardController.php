@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\activities;
 use App\Models\contact;
 use App\Models\Goals;
 use App\Models\Page;
@@ -36,7 +37,6 @@ class DashboardController extends Controller
         // $name=$user->name;
         $numberOfPosts = Post::count();
 
-
         return response()->view('pages.admin.dashboard', [
             'user' => $user,
             'posts' => $numberOfPosts,
@@ -47,18 +47,38 @@ class DashboardController extends Controller
     public function home()
     {
         $team = Team::paginate(4);
+        $slides = activities::where('slidable', true)->get();
+        $activities = activities::latest('created_at')->take(3)->get();
         $goals = Goals::all();
-        return view('pages.org.home', ['data' => $this->data(), 'team' => $team, 'goals' => $goals]);
+        return view('pages.org.home', ['data' => $this->data(), 'team' => $team, 'goals' => $goals, 'activities' => $activities, 'slides' => $slides]);
     }
     public function about()
     {
         return view('pages.org.about', ['data' => $this->data()]);
     }
-    public function activities()
+    public function insights()
     {
+        $activities = activities::where('type', 'insights')->paginate(6);
 
-        $posts = Post::where('activities', '=', '1')->get();
-        return view('pages.org.activities', ['data' => $this->data(), 'posts' => $posts]);
+        if (request()->ajax()) {
+            return view('partials.activities', ['activities' => $activities]);
+        }
+
+        return view('pages.org.news-insights.cards', [
+            'data' => $this->data(),
+            'activities' => $activities
+        ]);
+    }
+    public function news()
+    {
+        $activities = activities::where('type', '=', 'news')->paginate(6);
+        return view('pages.org.news-insights.cards', ['data' => $this->data(), 'activities' => $activities]);
+    }
+    public function activity(int $id)
+    {
+        $activity = activities::findOrFail($id);
+        // dd($activity->thumbnail);
+        return view('pages.org.news-insights.activity', ['data' => $this->data(), 'activity' => $activity]);
     }
     public function team()
     {

@@ -7,6 +7,8 @@ use App\Models\Folder;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+// use Livewire\Component;
+
 class FileList extends Component
 {
     public $folders = [];     // لحفظ المجلدات
@@ -82,10 +84,12 @@ class FileList extends Component
                 // إذا لم يتم العثور على المجلد
                 session()->flash('error', 'Folder not found.');
             }
+            $this->retrive();
             $this->dispatch('folderDeleted');
         } elseif ($type == "file") {
             $file = File::find($id);
             $file->delete();
+            $this->retrive();
             $this->dispatch('fileDeleted');
         }
     }

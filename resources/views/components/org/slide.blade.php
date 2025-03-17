@@ -1,7 +1,7 @@
 <section id="hero" class="d-flex justify-content-center align-items-center">
     <div id="heroCarousel" class="container carousel carousel-fade" data-ride="carousel">
         <!-- Slide 1 -->
-        <div class="carousel-item active" data-bg-image="{{ asset('org/img/portfolio/portfolio-1.jpg') }}">
+        {{-- <div class="carousel-item active" data-bg-image="{{ asset('org/img/portfolio/portfolio-1.jpg') }}">
             <div class="carousel-container">
                 <h2 class="animated fadeInDown">Making your business<br>profitable for today and tomorrow</h2>
                 <p class="animated fadeInUp">
@@ -13,10 +13,30 @@
                         style="font-size: 1rem">Learn More</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
+        @php
+            $i=0;
+        @endphp
+        @foreach ($slides as $slide)
+            <!-- Slide 2 -->
+            <div class="carousel-item @if($i==0) active @endif" data-bg-image="{{ Storage::url($slide->thumbnail) }}">
+                <div class="carousel-container">
+                    <h2 class="animated fadeInDown">{{ $slide->title }}</h2>
+                    <p class="animated fadeInUp">
+                    <h3 class="text-white">{{ $slide->card_description }}</h3>
+                    </p>
+                    <div>
+                        <a href="{{ route('activity', $slide->id) }}" class="bg-danger text-white btn-get-started animated fadeInUp">Read More</a>
+                    </div>
+                </div>
+            </div>
+            @php
+                $i++;
+            @endphp
+        @endforeach
 
         <!-- Slide 2 -->
-        <div class="carousel-item" data-bg-image="{{ asset('org/img/portfolio/portfolio-2.jpg') }}">
+        {{-- <div class="carousel-item" data-bg-image="{{ asset('org/img/portfolio/portfolio-2.jpg') }}">
             <div class="carousel-container">
                 <h2 class="animated fadeInDown">Lorem Ipsum Dolor</h2>
                 <p class="animated fadeInUp">
@@ -26,10 +46,10 @@
                     <a href="#" class="bg-danger text-white btn-get-started animated fadeInUp">Read More</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Slide 3 -->
-        <div class="carousel-item" data-bg-image="{{ asset('org/img/portfolio/portfolio-3.jpg') }}">
+        {{-- <div class="carousel-item" data-bg-image="{{ asset('org/img/portfolio/portfolio-3.jpg') }}">
             <div class="carousel-container">
                 <h2 class="animated fadeInDown">Maximize Your Potential</h2>
                 <p class="animated fadeInUp">
@@ -39,7 +59,7 @@
                     <a href="#" class="bg-danger text-white btn-get-started animated fadeInUp">Our Services</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Carousel Controls -->
         <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">

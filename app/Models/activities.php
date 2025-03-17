@@ -9,8 +9,13 @@ class activities extends Model
 {
     use HasFactory;
 
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'post_id');
-    }
+    protected $fillable = [
+        'title',
+        'thumbnail',
+        'card_description',
+        'description',
+        'admin_id',
+        'slidable',
+        'type',
+    ];
 }

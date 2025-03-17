@@ -29,7 +29,7 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type'  => 'required|in:revenue,expense,discount',
+            'type'  => 'required|in:phone,email,address',
             'text' => 'required|string|max:255',
         ]);
 
@@ -57,31 +57,20 @@ class ContactController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        // Validate request
         $request->validate([
-            'type'  => 'required|in:revenue,expense,discount',
+            'type'  => 'required|in:phone,email,address',
             'text' => 'required|string|max:255',
         ]);
 
-        // Find contact by ID
         $contact = Contact::findOrFail($id);
-        $contact->name  = $request->name;
-        $contact->email = $request->email;
-        $contact->phone = $request->phone;
+        $contact->type = $request->type;
+        $contact->text = $request->text;
         $updated = $contact->save();
 
-        if ($updated) {
-            return response()->json([
-                'status'  => true,
-                'message' => 'Contact updated successfully!',
-            ]);
-        } else {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Failed to update contact.',
-            ], 500);
-        }
-        //
+        return response()->json([
+            'status' => $updated,
+            'message' => $updated ? 'Contact updated successfully!' : 'Failed to update contact.'
+        ]);
     }
 
     /**

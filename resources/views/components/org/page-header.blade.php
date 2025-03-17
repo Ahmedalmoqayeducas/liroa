@@ -20,11 +20,18 @@
                     </a>
                 </li>
 
-                <li class="{{ Route::currentRouteName() == 'activities' ? 'active' : '' }}">
+                <li class="{{ Route::currentRouteName() == 'insights' ? 'active' : '' }}">
                     <a class="
-                     {{ Route::currentRouteName() == 'home' ? 'text-light' : (Route::currentRouteName() == 'activities' ? 'text-danger' : 'text-dark') }}"
-                        href="{{ route('activities') }}">
-                        <span style="display: inline-block; font-size: medium; font-weight: bold;">Activities</span>
+                     {{ Route::currentRouteName() == 'home' ? 'text-light' : (Route::currentRouteName() == 'activities.insights' ? 'text-danger' : 'text-dark') }}"
+                        href="{{ route('activities.insights') }}">
+                        <span style="display: inline-block; font-size: medium; font-weight: bold;">Insights</span>
+                    </a>
+                </li>
+                <li class="{{ Route::currentRouteName() == 'news' ? 'active' : '' }}">
+                    <a class="
+                     {{ Route::currentRouteName() == 'home' ? 'text-light' : (Route::currentRouteName() == 'activities.news' ? 'text-danger' : 'text-dark') }}"
+                        href="{{ route('activities.news') }}">
+                        <span style="display: inline-block; font-size: medium; font-weight: bold;">News</span>
                     </a>
                 </li>
 

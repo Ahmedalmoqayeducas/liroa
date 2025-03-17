@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('card-description');
+            $table->string('thumbnail')->nullable();
+            $table->text('card_description');
             $table->longText('description');
             $table->foreignId('admin_id')->constrained('admins')->nullOnDelete();
             $table->enum('type', ['news', 'insights']);
-       
+            $table->boolean('slidable')->default(false);
             $table->timestamps();
         });
     }

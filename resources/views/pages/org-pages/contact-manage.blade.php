@@ -18,7 +18,6 @@
                                     <th scope="col" class="table-th"> # </th>
                                     <th scope="col" class="table-th"> type </th>
                                     <th scope="col" class="table-th"> text </th>
-
                                     <th scope="col" class="table-th"> Operations </th>
                                 </tr>
                             </thead>
@@ -28,12 +27,11 @@
                                         <td class="table-td">{{ $loop->iteration }}</td>
                                         <td class="table-td">{{ $contact->type }}</td>
                                         <td class="table-td">{{ $contact->text }}</td>
-
                                         <td class="table-td ">
                                             <div class="flex space-x-3 rtl:space-x-reverse">
                                                 <!-- Edit Button -->
                                                 <button
-                                                    onclick="editContact({{ $contact->id }}, '{{ $contact->name }}', '{{ $contact->email }}', '{{ $contact->phone }}')"
+                                                    onclick="editContact({{ $contact->id }}, '{{ $contact->type }}', '{{ $contact->text }}')"
                                                     class="action-btn btn-warning" title="Edit Contact">
                                                     <iconify-icon icon="heroicons-outline:pencil-alt"></iconify-icon>
                                                 </button>
@@ -53,16 +51,13 @@
                         <div class="container mt-3">
                             {{ $data->links() }}
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Include SweetAlert2 from CDN (or your local asset) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Include Axios from CDN (or your local asset) -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
@@ -71,31 +66,30 @@
             Swal.fire({
                 title: 'Add New Contact',
                 html: `
-                    <select type="text" id="contactType" class="swal2-select" placeholder="type">
-                        <option value="phone">phone</option>
-                        <option value="email">email</option>
-                        <option value="address">address</option>
-                        </select>
-                    <input type="text" id="contactText" class="swal2-input" placeholder="text">
+                    <select id="contactType" name="type" class="swal2-select">
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                        <option value="address">Address</option>
+                    </select>
+                    <input type="text" id="contactText" class="swal2-input" placeholder="Enter text">
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
                 confirmButtonText: 'Submit',
                 cancelButtonText: 'Cancel',
-                background: '#ffffff',
                 customClass: {
                     popup: 'custom-swal-popup',
                     title: 'custom-swal-title',
-                    text: 'custom-swal-text',
                     input: 'custom-swal-input',
                     confirmButton: 'custom-swal-confirm',
                     cancelButton: 'custom-swal-cancel'
                 },
                 preConfirm: () => {
-                    const name = document.getElementById('contactType').value;
-                    const email = document.getElementById('contactText').value;
-                    if (!name) {
-                        Swal.showValidationMessage('Please enter a name!');
+                    const type = document.getElementById('contactType').value;
+                    const text = document.getElementById('contactText').value;
+
+                    if (!type || !text) {
+                        Swal.showValidationMessage('All fields are required!');
                         return false;
                     }
                     return {
@@ -106,7 +100,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const formData = result.value;
-
                     axios.post(`{{ route('contacts.store') }}`, formData, {
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -117,33 +110,22 @@
                                 title: response.data.status ? 'Success!' : 'Error!',
                                 text: response.data.message,
                                 icon: response.data.status ? 'success' : 'error',
-                                background: '#ffffff',
                                 customClass: {
                                     popup: 'custom-swal-popup',
-                                    title: 'custom-swal-title',
-                                    text: 'custom-swal-text'
+                                    title: 'custom-swal-title'
                                 }
-                            }).then(() => {
-                                if (response.data.status) {
-                                    // Reload to see the new contact
-                                    location.reload();
-                                }
-                            });
+                            }).then(() => location.reload());
                         })
                         .catch(error => {
                             Swal.fire({
                                 title: 'Error!',
-                                text: error.response?.data?.message ??
-                                    'An error occurred while connecting to the server.',
+                                text: error.response?.data?.message || 'An error occurred!',
                                 icon: 'error',
-                                background: '#ffffff',
                                 customClass: {
                                     popup: 'custom-swal-popup',
-                                    title: 'custom-swal-title',
-                                    text: 'custom-swal-text'
+                                    title: 'custom-swal-title'
                                 }
                             });
-                            console.error('Error:', error.response?.data ?? error.message);
                         });
                 }
             });
@@ -154,31 +136,30 @@
             Swal.fire({
                 title: 'Edit Contact',
                 html: `
-                    <select type="text" id="contactType" class="swal2-select" value="${currentType}" placeholder="type">
-                        <option value="phone">phone</option>
-                        <option value="email">email</option>
-                        <option value="address">address</option>
-                        </select>
-                    <input type="text" id="contactText" class="swal2-input" value="${currentText}" placeholder="text">
+                    <select id="contactType" class="swal2-select">
+                        <option value="phone" ${currentType === 'phone' ? 'selected' : ''}>Phone</option>
+                        <option value="email" ${currentType === 'email' ? 'selected' : ''}>Email</option>
+                        <option value="address" ${currentType === 'address' ? 'selected' : ''}>Address</option>
+                    </select>
+                    <input type="text" id="contactText" class="swal2-input" value="${currentText}">
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
                 confirmButtonText: 'Update',
                 cancelButtonText: 'Cancel',
-                background: '#ffffff',
                 customClass: {
                     popup: 'custom-swal-popup',
                     title: 'custom-swal-title',
-                    text: 'custom-swal-text',
                     input: 'custom-swal-input',
                     confirmButton: 'custom-swal-confirm',
                     cancelButton: 'custom-swal-cancel'
                 },
                 preConfirm: () => {
-                    const name = document.getElementById('contactType').value;
-                    const email = document.getElementById('contactText').value;
-                    if (!name) {
-                        Swal.showValidationMessage('Please enter a name!');
+                    const type = document.getElementById('contactType').value;
+                    const text = document.getElementById('contactText').value;
+
+                    if (!type || !text) {
+                        Swal.showValidationMessage('All fields are required!');
                         return false;
                     }
                     return {
@@ -189,8 +170,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const formData = result.value;
-
-                    axios.put(`contacts/${id}`, formData, {
+                    axios.put(`/dash/pages/contacts/${id}`, formData, {
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             }
@@ -200,33 +180,22 @@
                                 title: response.data.status ? 'Success!' : 'Error!',
                                 text: response.data.message,
                                 icon: response.data.status ? 'success' : 'error',
-                                background: '#ffffff',
                                 customClass: {
                                     popup: 'custom-swal-popup',
-                                    title: 'custom-swal-title',
-                                    text: 'custom-swal-text'
+                                    title: 'custom-swal-title'
                                 }
-                            }).then(() => {
-                                if (response.data.status) {
-                                    // Reload to see the updated contact
-                                    location.reload();
-                                }
-                            });
+                            }).then(() => location.reload());
                         })
                         .catch(error => {
                             Swal.fire({
                                 title: 'Error!',
-                                text: error.response?.data?.message ??
-                                    'An error occurred while connecting to the server.',
+                                text: error.response?.data?.message || 'An error occurred!',
                                 icon: 'error',
-                                background: '#ffffff',
                                 customClass: {
                                     popup: 'custom-swal-popup',
-                                    title: 'custom-swal-title',
-                                    text: 'custom-swal-text'
+                                    title: 'custom-swal-title'
                                 }
                             });
-                            console.error('Error:', error.response?.data ?? error.message);
                         });
                 }
             });
@@ -234,106 +203,78 @@
 
         // 3) DELETE Contact
         function deleteContact(id) {
-            // Confirm before deleting (optional)
             Swal.fire({
                 title: 'Delete Contact?',
-                text: "Are you sure you want to delete this contact?",
+                text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Delete',
+                confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'Cancel',
-                background: '#ffffff',
                 customClass: {
                     popup: 'custom-swal-popup',
                     title: 'custom-swal-title',
-                    text: 'custom-swal-text',
                     confirmButton: 'custom-swal-confirm',
                     cancelButton: 'custom-swal-cancel'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`contacts/${id}`, {
+                    axios.delete(`/dash/pages/contacts/${id}`, {
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             }
                         })
                         .then(response => {
-                            // If you want to remove the row from the table without reloading:
                             if (response.data.status) {
                                 document.getElementById(`contact_${id}`).remove();
                             }
                             Swal.fire({
-                                title: response.data.status ? 'Success!' : 'Error!',
+                                title: response.data.status ? 'Deleted!' : 'Error!',
                                 text: response.data.message,
                                 icon: response.data.status ? 'success' : 'error',
-                                background: '#ffffff',
                                 customClass: {
                                     popup: 'custom-swal-popup',
-                                    title: 'custom-swal-title',
-                                    text: 'custom-swal-text'
+                                    title: 'custom-swal-title'
                                 }
                             });
                         })
                         .catch(error => {
                             Swal.fire({
                                 title: 'Error!',
-                                text: error.response?.data?.message ??
-                                    'An error occurred while connecting to the server.',
+                                text: error.response?.data?.message || 'An error occurred!',
                                 icon: 'error',
-                                background: '#ffffff',
                                 customClass: {
                                     popup: 'custom-swal-popup',
-                                    title: 'custom-swal-title',
-                                    text: 'custom-swal-text'
+                                    title: 'custom-swal-title'
                                 }
                             });
-                            console.error('Error:', error.response?.data ?? error.message);
                         });
                 }
             });
         }
     </script>
 
-    <!-- Optional styling for SweetAlert2 -->
     <style>
-        /* Popup design */
         .custom-swal-popup {
             border: 2px solid #6c757d;
-            /* gray border */
             border-radius: 10px;
         }
 
-        /* Title */
         .custom-swal-title {
             color: #007bff;
-            /* blue color */
             font-weight: bold;
         }
 
-        /* Text */
-        .custom-swal-text {
-            color: #000;
-            /* black color */
-        }
-
-        /* Input field */
         .custom-swal-input {
-            border: 1px solid #6c757d;
-            /* gray border for input */
+            border: 1px solid #6c757d !important;
+            margin: 0.5em auto !important;
         }
 
-        /* Confirm button */
         .custom-swal-confirm {
-            background-color: #007bff;
-            /* blue */
-            color: #fff;
+            background-color: #007bff !important;
         }
 
-        /* Cancel button */
         .custom-swal-cancel {
-            background-color: #6c757d;
-            /* gray */
-            color: #fff;
+            background-color: #6c757d !important;
         }
     </style>
 @endsection
